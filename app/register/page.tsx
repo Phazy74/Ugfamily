@@ -34,14 +34,14 @@ export default function RegisterPage() {
   const header = (
     <>
       <div className="flex items-start justify-between">
-        <h2 className="text-2xl font-semibold">Create Your Account</h2>
+        <h2 className="text-[19px] font-semibold">Create Your Account</h2>
         <div className="text-sm text-gray-600">Step {step} of 4</div>
       </div>
       {/* tabs + progress */}
       <div className="mt-3">
-        <div className="flex gap-6 text-sm">
+        <div className="flex pb-2 justify-between items-center gap-[2px]  text-sm">
           {steps.map((label, i)=>(
-            <div key={label} className={`pb-2 ${step===i+1? "text-[var(--headtext)] font-medium":"text-gray-500"}`}>
+            <div key={label} className={` ${step===i+1?  "text-[var(--headtext)] text-center font-medium":"text-gray-500 flex  text-center text-[10px] "}`}>
               {label}
             </div>
           ))}
