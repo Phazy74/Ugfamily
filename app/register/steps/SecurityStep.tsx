@@ -3,71 +3,206 @@ import { useState } from "react";
 import PasswordStrength from "@/components/PasswordStrength";
 import PasswordInput from "@/components/PasswordInput";
 
+// export default function SecurityStep({
+//   data, setField, prev , next
+// }: {
+//   data:any; setField:(k:any,v:any)=>void; prev:()=>void;
+// }) {
+//   const [loading, setLoading] = useState(false);
+//   const [err, setErr] = useState<string|null>(null);
+//   const [ok, setOk] = useState<string|null>(null);
+//   const submit = async () => {
+//   setErr(null);
+//   setOk(null);
+
+//   setLoading(true);
+//   try {
+//     const API = process.env.NEXT_PUBLIC_API_URL;
+//     const res = await fetch(`${API}/auth/register`, {
+//       method: "POST",
+//       headers: { "Content-Type": "application/json" },
+//       body: JSON.stringify({
+//         personalInfo: {
+//           legalFirstName: data.legalFirstName,
+//           middleName: data.middleName,
+//           legalLastName: data.legalLastName,
+//           username: data.username
+//         },
+//         contactDetail: {
+//           email: data.email,
+//           phone: data.phone,
+//           country: data.country
+//         },
+//         accountSetup: {
+//           accountType: data.accountType,
+//           transactionPin: data.transactionPin
+//         },
+//         security: {
+//           password: data.password,
+//           confirmPassword: data.confirmPassword,
+//           acceptTerms: data.acceptTerms
+//         }
+//       })
+//     });
+
+//     const json = await res.json();
+
+//     if (!res.ok) {
+//       console.error("REGISTRATION ERROR:", json);
+//       throw new Error(json?.error || json?.errors?.[0] || "Registration failed");
+//     }
+//      localStorage.setItem("token", json.token);
+//     // setOk("Account created. Redirecting...");
+//     // setTimeout(() => (window.location.href = "/login"), 1000);
+//     setOk("Account created. Redirecting...");
+// setTimeout(() => {
+//   window.location.href = "/dashboard/verify-account";
+// }, 1000);
+
+
+//   } catch (e:any) {
+//     console.error("CLIENT ERROR:", e);
+//     setErr(e.message);
+//   } finally {
+//     setLoading(false);
+//   }
+// };
 export default function SecurityStep({
-  data, setField, prev
+  data,
+  setField,
+  prev,
 }: {
-  data:any; setField:(k:any,v:any)=>void; prev:()=>void;
+  data: any;
+  setField: (k: any, v: any) => void;
+  prev: () => void;
 }) {
   const [loading, setLoading] = useState(false);
-  const [err, setErr] = useState<string|null>(null);
-  const [ok, setOk] = useState<string|null>(null);
-const submit = async () => {
-  setErr(null);
-  setOk(null);
+  const [err, setErr] = useState<string | null>(null);
+  const [ok, setOk] = useState<string | null>(null);
 
-  setLoading(true);
-  try {
-    const API = process.env.NEXT_PUBLIC_API_URL;
-    const res = await fetch(`${API}/auth/register`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-  personalInfo: {
-    legalFirstName: data.legalFirstName,
-    middleName: data.middleName,
-    legalLastName: data.legalLastName,
-    username: data.username
-  },
-  contactDetail: {   // ← FIXED
-    email: data.email,
-    phone: data.phone,
-    country: data.country
-  },
-  accountSetup: {
-    accountType: data.accountType,
-    transactionPin: data.transactionPin // backend hashes it, string is fine
-  },
-  security: {
-    password: data.password,
-    confirmPassword: data.confirmPassword,
-    acceptTerms: data.acceptTerms
-  }
-})
+  const submit = async () => {
+    setErr(null);
+    setOk(null);
 
-    });
+    if (!data.password || !data.confirmPassword)
+      return setErr("Password & confirmation required.");
 
-    // 🔥 NEW: read JSON even if status = 400
-    const json = await res.json();
+    if (data.password !== data.confirmPassword)
+      return setErr("Passwords do not match.");
 
-    if (!res.ok) {
-      console.error("REGISTRATION ERROR:", json); // ← LOG FULL ERROR
-      throw new Error(json?.error || json?.errors?.[0]?.msg || "Registration failed");
+    if (!data.acceptTerms)
+      return setErr("You must accept the terms to continue.");
+
+    setLoading(true);
+    try {
+      const API = process.env.NEXT_PUBLIC_API_URL;
+
+      const res = await fetch(`${API}/auth/register`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          personalInfo: {
+            legalFirstName: data.legalFirstName,
+            middleName: data.middleName,
+            legalLastName: data.legalLastName,
+            username: data.username,
+          },
+          contactDetail: {
+            email: data.email,
+            phone: data.phone,
+            country: data.country,
+          },
+          accountSetup: {
+            accountType: data.accountType,
+            transactionPin: data.transactionPin,
+          },
+          security: {
+            password: data.password,
+            confirmPassword: data.confirmPassword,
+            acceptTerms: data.acceptTerms,
+          },
+        }),
+      });
+
+      const json = await res.json();
+
+      if (!res.ok) {
+        throw new Error(
+          json.error || json.errors?.[0]?.msg || "Registration failed"
+        );
+      }
+
+      localStorage.setItem("token", json.token);
+
+      setOk("Account created. Redirecting...");
+      setTimeout(() => {
+        window.location.href = "/dashboard/verify-account";
+      }, 1000);
+    } catch (e: any) {
+      setErr(e.message);
+    } finally {
+      setLoading(false);
     }
-    if (!data.email || data.email.trim() === "") {
-  return setErr("Email is required.");
-}
+  };
+
+// const submit = async () => {
+//   setErr(null);
+//   setOk(null);
+
+//   setLoading(true);
+//   try {
+//     const API = process.env.NEXT_PUBLIC_API_URL;
+//     const res = await fetch(`${API}/auth/register`, {
+//       method: "POST",
+//       headers: { "Content-Type": "application/json" },
+//       body: JSON.stringify({
+//   personalInfo: {
+//     legalFirstName: data.legalFirstName,
+//     middleName: data.middleName,
+//     legalLastName: data.legalLastName,
+//     username: data.username
+//   },
+//   contactDetail: {   // ← FIXED
+//     email: data.email,
+//     phone: data.phone,
+//     country: data.country
+//   },
+//   accountSetup: {
+//     accountType: data.accountType,
+//     transactionPin: data.transactionPin // backend hashes it, string is fine
+//   },
+//   security: {
+//     password: data.password,
+//     confirmPassword: data.confirmPassword,
+//     acceptTerms: data.acceptTerms
+//   }
+// })
+
+//     });
+
+//     // 🔥 NEW: read JSON even if status = 400
+//     const json = await res.json();
+
+//     if (!res.ok) {
+//       console.error("REGISTRATION ERROR:", json); // ← LOG FULL ERROR
+//       throw new Error(json?.error || json?.errors?.[0]?.msg || "Registration failed");
+//     }
+//     if (!data.email || data.email.trim() === "") {
+//   return setErr("Email is required.");
+// }
 
 
-    setOk("Account created. Redirecting...");
-    setTimeout(() => (window.location.href = "/login"), 1000);
 
-  } catch (e:any) {
-    console.error("CLIENT ERROR:", e);  // ← SEE EXACT ERROR IN DEVTOOLS
-    setErr(e.message);
-  } finally {
-    setLoading(false);
-  }
-};
+//     setOk("Account created. Redirecting...");
+//     setTimeout(() => (window.location.href = "/login"), 1000);
+
+//   } catch (e:any) {
+//     console.error("CLIENT ERROR:", e);  // ← SEE EXACT ERROR IN DEVTOOLS
+//     setErr(e.message);
+//   } finally {
+//     setLoading(false);
+//   }
+// };
 
 
 

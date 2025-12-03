@@ -9,7 +9,12 @@
   --headtext:#14202e;
   --ptext:#828282;
   --white:#ffffff;
+  --bgwhite:rgba(233, 241, 253, 0.87);;
+  --border: 2px 2px 3px #f9fafb;
+  --bgwhitei:rgb(218, 233, 255);;
+
 }
+
 
 /* helper input style to match the reference */
 .input {
