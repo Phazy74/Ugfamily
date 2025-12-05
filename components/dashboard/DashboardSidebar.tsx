@@ -211,7 +211,7 @@ const menu = [
 
   { title: "Local Transfer", icon: Send, section: "TRANSFERS", href: "/dashboard/local-transfer" },
   { title: "International Wire", icon: Globe, href: "/dashboard/wire-transfer" },
-  { title: "Deposit", icon: PiggyBank, href: "/dashboard/home" },
+  { title: "Deposit", icon: PiggyBank, href: "/dashboard/deposit" },
 
   { title: "Loan Request", icon: FileSearch, href: "/dashboard/loans" },
   { title: "IRS Tax Refund", icon: FileSearch, href: "/dashboard/refund" },
