@@ -103,7 +103,7 @@ export default function MobileMenu({
 }) {
   const menuItems = [
     { title: "Home", icon: LayoutDashboard, href: "/dashboard/home" },
-    { title: "Activity", icon: ReceiptText, href: "/dashboard/activity" },
+    { title: "Activity", icon: ReceiptText, href: "/dashboard/transactions" },
     { title: "Cards", icon: CreditCard, href: "/dashboard/cards" },
     { title: "Transfer", icon: Send, href: "/dashboard/local-transfer" },
     { title: "Int'l Wire", icon: Globe, href: "/dashboard/wire-transfer" },
@@ -113,7 +113,7 @@ export default function MobileMenu({
     { title: "IRS Refund", icon: FileSearch, href: "/dashboard/refund" },
     { title: "Settings", icon: Settings, href: "/dashboard/settings" },
     { title: "Support", icon: LifeBuoy, href: "/dashboard/support" },
-    { title: "Logout", icon: LogOut, href: "/logout" }
+    { title: "Logout", icon: LogOut, href: "/" }
   ];
 
 

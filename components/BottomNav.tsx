@@ -41,7 +41,7 @@
 // }
 "use client";
 
-import { Home, Wallet, BarChart3, User, Scan } from "lucide-react";
+import { Home, Wallet,  User, Scan,Send } from "lucide-react";
 import { motion } from "framer-motion";
 import Link from "next/link";
 
@@ -62,24 +62,24 @@ export default function BottomNavCurved({
         <div className="absolute inset-x-3 bottom-3 rounded-3xl bg-white  shadow-[0px_-6px_24px_rgba(0,0,0,0.08)] h-[68px]" />
 
         {/* Notch “cut-out” (same color as your page background) */}
-        <div
+        {/* <div
           className={`absolute left-1/2 -translate-x-1/2 -top-2 ${pageBgClass}
                       w-20 h-10 rounded-b-[40px]`}
           aria-hidden
-        />
+        /> */}
 
         {/* Nav content */}
         <div className="absolute inset-x-0 bottom-0 h-24 flex items-end justify-between px-8 pb-5">
           {/* Left icons */}
           <NavItem href="/dashboard/home" icon={<Home size={22} />} label="Home" />
-          <NavItem href="/dashboard/wallet" icon={<Wallet size={22} />} label="Wallet" />
+          <NavItem href="/dashboard/deposit" icon={<Wallet size={22} />} label="Deposit" />
 
           {/* Spacer under the FAB so spacing feels even */}
           <div className="w-16" />
 
           {/* Right icons */}
-          <NavItem href="/dashboard/stats" icon={<BarChart3 size={22} />} label="Stats" />
-          <NavItem href="/dashboard/profile" icon={<User size={22} />} label="Me" />
+          <NavItem href="/dashboard/local-tranfer" icon={<Send size={22} />} label="Transfer" />
+          <NavItem href="/dashboard/settings" icon={<User size={22} />} label="Me" />
         </div>
 
         {/* Center FAB (on top of the notch) */}

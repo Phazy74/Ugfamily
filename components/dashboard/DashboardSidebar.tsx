@@ -206,7 +206,7 @@ import Link from "next/link";
 
 const menu = [
   { title: "Dashboard", icon: LayoutDashboard, href: "/dashboard/home" },
-  { title: "Transactions", icon: ReceiptText, href: "/dashboard/home" },
+  { title: "Transactions", icon: ReceiptText, href: "/dashboard/transactions" },
   { title: "Cards", icon: CreditCard, href: "/dashboard/cards" },
 
   { title: "Local Transfer", icon: Send, section: "TRANSFERS", href: "/dashboard/local-transfer" },
@@ -215,7 +215,7 @@ const menu = [
 
   { title: "Loan Request", icon: FileSearch, href: "/dashboard/loans" },
   { title: "IRS Tax Refund", icon: FileSearch, href: "/dashboard/refund" },
-  { title: "Loan History", icon: History, href: "/dashboard/loan-history" },
+ 
 
   { title: "Settings", icon: Settings, section: "ACCOUNT", href: "/dashboard/settings" },
   { title: "Support Ticket", icon: LifeBuoy, href: "/dashboard/support" }

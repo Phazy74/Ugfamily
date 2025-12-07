@@ -25,7 +25,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
         </aside>
 
         {/* Page Content */}
-        <main className="flex-1 p-6 bg-[var(--bgwhite)]">{children}
+        <main className="flex-1 pr-6   pt-6  pl-6  pb-30 bg-[var(--bgwhite)]">{children}
           <BottomNav onMenuToggle={() => setMenuOpen(!menuOpen)} />
         </main>
       </div>
