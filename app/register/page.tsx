@@ -368,14 +368,12 @@ const [nextToken, setNextToken] = useState<string | null>(null);
         )} */}
       {step === 2 && !showVerify && (
   <ContactDetails
-  data={data}
-  setField={setField}
-  prev={() => setStep(1)}
-  next={() => setStep(2)}
-  setTempToken={setTempToken}
-  setShowVerify={setShowVerify}
-/>
-
+    data={data}
+    setField={setField}
+    prev={() => setStep(1)}
+    setTempToken={setTempToken}
+    setShowVerify={setShowVerify}
+  />
 )}
 
         {showVerify && (
