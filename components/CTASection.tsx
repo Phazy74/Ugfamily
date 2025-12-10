@@ -48,10 +48,10 @@ export default function CtaSection() {
                 We've made it easy for GreenTop Bank employees to harness their creativity, bring their ideas to life, and solve customer and colleague problems.
               </p>
               <div className="mt-8 flex flex-wrap gap-4">
-                <Link href="#" className="bg-[var(--lemon)] text-[var(--darkgreen)] font-bold px-6 py-3 rounded-full transition-transform hover:scale-105">
+                <Link href="/register" className="bg-[var(--lemon)] text-[var(--darkgreen)] font-bold px-6 py-3 rounded-full transition-transform hover:scale-105">
                   Get Started Today
                 </Link>
-                <Link href="#" className="bg-white/10 text-white font-bold px-6 py-3 rounded-full border border-white/20 hover:bg-white/20 transition-colors">
+                <Link href="/about" className="bg-white/10 text-white font-bold px-6 py-3 rounded-full border border-white/20 hover:bg-white/20 transition-colors">
                   Explore Our Services
                 </Link>
               </div>

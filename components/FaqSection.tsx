@@ -51,7 +51,7 @@ export default function FaqSection() {
           </div>
           {/* Right Column (Button) */}
           <div className="flex-shrink-0">
-            <Link href="/contact/general-inquiry" className="inline-flex items-center bg-[var(--lemon)] text-[var(--darkgreen)] font-bold px-6 py-3 rounded-full transition-transform hover:scale-105">
+            <Link href="/contact" className="inline-flex items-center bg-[var(--lemon)] text-[var(--darkgreen)] font-bold px-6 py-3 rounded-full transition-transform hover:scale-105">
               Contact Now <ArrowIcon />
             </Link>
           </div>
