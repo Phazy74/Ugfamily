@@ -69,6 +69,8 @@
 .sk-cube-grid .sk-cube {
   width: 33%;
   height: 33%;
+ 
+  background-color: #ffffff;
    /* UnionGateBank Blue */
   float: left;
   animation: sk-cubeGridScaleDelay 1.3s infinite ease-in-out;
@@ -102,5 +104,5 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  z-index: 999999; /* Top of everything */
+   /* Top of everything */
 }
