@@ -25,13 +25,7 @@ const nextConfig = {
     ],
     unoptimized: true,   // <-- ADD THIS
   },
-   experimental: {
-    turbo: false,
-  },
-  i18n: {
-    locales: ["en", "fr", "es", "de"],
-    defaultLocale: "en",
-  },
+   
 };
 
 module.exports = nextConfig;
