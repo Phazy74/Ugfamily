@@ -344,7 +344,7 @@ export default function Navbar() {
 
                 <div className="font-semibold mt-4">Sefton Savings</div>
                 <Link href="/loans">Business Loan</Link>
-                <Link href="/savings/account2">Savings Plan 2</Link>
+                
                 <Link href="/about" >
                       About us
                     </Link>
