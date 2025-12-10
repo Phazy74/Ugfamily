@@ -191,7 +191,7 @@ export default function MobileMenu({
                  {data.kycCompleted ? (
    <p className="text-green-400 text-xs mt-1">✓ KYC Verified</p>
 ) : (
-   <Link href="/verify-account" className="p-6 text-red-100 text-xs mt-1">● Verify KYC</Link>
+   <Link href="/verify-account" className="p-6 text-red-400 text-xs mt-1">● Verify KYC</Link>
 )}
 
               </div>
