@@ -100,6 +100,7 @@
 .loader-wrapper {
   position: fixed;
   inset: 0;
+  z-index: 999999;
   background-color: var(--darkgreen); /* Dark Green */
   display: flex;
   justify-content: center;

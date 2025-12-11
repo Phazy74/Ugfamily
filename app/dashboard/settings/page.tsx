@@ -8,6 +8,7 @@ import CubeLoader from "@/components/FullPageLoader";
 
 export default function SettingsPage() {
   const [user, setUser] = useState<any>(null);
+   const [data, setData] = useState<any>(null);
 
   const token =
     typeof window !== "undefined" ? localStorage.getItem("token") : "";
@@ -22,19 +23,32 @@ export default function SettingsPage() {
       .catch(console.error);
   }, [token]);
 
+  useEffect(() => {
+    if (!token) return;
+
+    fetch(`${process.env.NEXT_PUBLIC_API_URL}/user/me`, {
+      headers: { Authorization: `Bearer ${token}` }
+    })
+      .then(res => res.json())
+      .then(setData)
+      .catch(console.error);
+  }, [token]);
+
+  if (!data) return null;
+
   if (!user) return <div className="p-6"><CubeLoader/></div>;
 
   const initials = `${user.firstName?.charAt(0)}${user.lastName?.charAt(0)}`;
 
   return (
-    <div className="p-6 space-y-6">
+    <div className="pt-6 pb-6 space-y-6">
 
       {/* Profile Header */}
       <div className="bg-white rounded-xl p-6 shadow flex items-center gap-4">
         <div className="w-16 h-16 rounded-full bg-[#E4F5BD] text-gray-800 font-bold flex items-center justify-center text-xl">
-          {user.avatar ? (
+          {data.profileImage ? (
             <img
-              src={user.avatar}
+              src={data.profileImage}
               className="w-16 h-16 rounded-full object-cover"
             />
           ) : (

@@ -75,9 +75,19 @@ const fullName =
       {/* User Card */}
       <div className="bg-[#F3F8E6] rounded-xl p-4 mb-6">
         <div className="flex items-center gap-3">
-          <div className="w-12 h-12 bg-[#E4F5BD] rounded-full flex justify-center items-center font-semibold text-gray-800">
-            {initials}
-          </div>
+          {data.profileImage ? (
+  <img
+    src={data.profileImage}
+    className="w-16 h-16 rounded-full object-cover shadow"
+  />
+) : (
+  <div className="w-16 h-16 bg-green-200 rounded-full flex items-center justify-center text-xl font-bold">
+    {data.initials}
+  </div>
+)}
+
+
+
 
           <div>
             <p className="font-semibold text-gray-800">{data.fullName}</p>

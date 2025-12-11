@@ -248,7 +248,7 @@ function HistoryIcon() {
       <StatItem label="Transaction Limit" value={`$${account.limits.monthlyTransferLimit}`} icon={<Smartphone />} />
       <StatItem label="Pending Transactions" value="$0.00" icon={<RefreshCw />} />
       <StatItem label="Transaction Volume" value={`$${usd.toLocaleString()}`} icon={<ArrowUp />} />
-      <StatItem label="Account Age" value={`2 weeks`} icon={<Calendar />} />
+      
     </div>
   </div>
 
