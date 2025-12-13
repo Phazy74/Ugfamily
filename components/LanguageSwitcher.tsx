@@ -1,27 +1,35 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 import ReactCountryFlag from "react-country-flag";
 
 declare global {
   interface Window {
-    google?: any;
-    googleTranslateElementInit?: () => void;
+    google: any;
+    googleTranslateElementInit: () => void;
   }
 }
+
+type Language = {
+  code: string;
+  label: string;
+  country: string;
+};
 
 export default function LanguageSwitcher() {
   const [open, setOpen] = useState(false);
   const [currentLang, setCurrentLang] = useState("en");
 
-  const languages = [
+  const languages: Language[] = [
     { code: "en", label: "English", country: "US" },
-    { code: "fr", label: "French", country: "FR" },
     { code: "es", label: "Spanish", country: "ES" },
-    { code: "de", label: "German", country: "DE" }
+    { code: "fr", label: "French", country: "FR" },
+    { code: "de", label: "German", country: "DE" },
+    { code: "pt", label: "Portuguese", country: "PT" },
+    { code: "ru", label: "Russian", country: "RU" },
   ];
 
-  // Google Translate Initialization
+  /* Initialize Google Translate */
   useEffect(() => {
     const savedLang = localStorage.getItem("lang") || "en";
     setCurrentLang(savedLang);
@@ -30,75 +38,104 @@ export default function LanguageSwitcher() {
       new window.google.translate.TranslateElement(
         {
           pageLanguage: "en",
-          includedLanguages: "en,fr,es,de",
+          includedLanguages: languages.map(l => l.code).join(","),
           autoDisplay: false,
         },
         "google_translate_element"
       );
     };
 
-    const script = document.createElement("script");
-    script.src =
-      "//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit";
-    script.async = true;
-    document.body.appendChild(script);
+    if (!document.getElementById("google-translate-script")) {
+      const script = document.createElement("script");
+      script.id = "google-translate-script";
+      script.src =
+        "//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit";
+      script.async = true;
+      document.body.appendChild(script);
+    }
+
+    /* Hide navbar on load */
+    const hideBar = setInterval(() => {
+      const frame = document.querySelector(
+        ".goog-te-banner-frame"
+      ) as HTMLElement | null;
+      if (frame) {
+        frame.style.display = "none";
+        document.body.style.top = "0px";
+        clearInterval(hideBar);
+      }
+    }, 300);
+
+    return () => clearInterval(hideBar);
   }, []);
 
+  /* Switch language + hide navbar every time */
   const switchLanguage = (lang: string) => {
     setCurrentLang(lang);
     localStorage.setItem("lang", lang);
 
-    const select = document.querySelector(".goog-te-combo") as HTMLSelectElement;
-    if (select) {
-      select.value = lang;
-      select.dispatchEvent(new Event("change"));
-    }
+    const interval = setInterval(() => {
+      const select = document.querySelector(
+        ".goog-te-combo"
+      ) as HTMLSelectElement | null;
+
+      if (select) {
+        select.value = lang;
+        select.dispatchEvent(new Event("change"));
+        clearInterval(interval);
+      }
+    }, 300);
+
+    /* Hide Google navbar after changing language */
+    const hideAfterSwitch = setInterval(() => {
+      const frame = document.querySelector(
+        ".goog-te-banner-frame"
+      ) as HTMLElement | null;
+      if (frame) {
+        frame.style.display = "none";
+        document.body.style.top = "0px";
+        clearInterval(hideAfterSwitch);
+      }
+    }, 300);
 
     setOpen(false);
   };
 
   return (
     <div className="relative">
-      {/* UI BUTTON */}
       <button
-        className="flex items-center gap-2 bg-white rounded-md px-4 py-2 shadow hover:shadow-md transition text-black"
         onClick={() => setOpen(!open)}
+        className="flex items-center gap-2 bg-white px-3 py-2 rounded-md shadow text-gray-900 text-sm sm:text-base"
       >
-        {/* FLAG */}
         <ReactCountryFlag
-          countryCode={languages.find((l) => l.code === currentLang)?.country || "US"}
           svg
-          style={{ width: "20px", height: "20px" }}
+          countryCode={
+            languages.find(l => l.code === currentLang)?.country || "US"
+          }
+          style={{ width: 18, height: 18 }}
         />
-
-        {/* CODE */}
         <span className="font-medium">{currentLang.toUpperCase()}</span>
-
-        {/* ARROW */}
         <span>⌄</span>
       </button>
 
-      {/* DROPDOWN */}
       {open && (
-        <div className="absolute right-0 mt-2 bg-[var(--lemon)] text-[var(--headtext)] rounded-lg shadow-lg p-2 w-36 z-50">
-          {languages.map((lang) => (
+        <div className="absolute left-0 sm:right-0 mt-2 w-44 max-h-64 overflow-y-auto bg-white text-gray-900 rounded-lg shadow-lg z-50 border border-gray-200">
+          {languages.map(lang => (
             <button
               key={lang.code}
-              className="flex items-center gap-2 px-3 py-2 hover:bg-gray-100 w-full text-left rounded"
               onClick={() => switchLanguage(lang.code)}
+              className="flex items-center gap-2 w-full px-4 py-3 text-gray-800 text-sm hover:bg-gray-100"
             >
               <ReactCountryFlag
-                countryCode={lang.country}
                 svg
-                style={{ width: "20px", height: "20px" }}
+                countryCode={lang.country}
+                style={{ width: 18, height: 18 }}
               />
-              {lang.code.toUpperCase()}
+              {lang.label}
             </button>
           ))}
         </div>
       )}
-
-      {/* Hidden Google Translate Element */}
       <div id="google_translate_element" className="hidden"></div>
     </div>
   );

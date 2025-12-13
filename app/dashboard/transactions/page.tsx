@@ -26,9 +26,9 @@ export default function TransactionsPage() {
       .catch(console.error);
   }, [token]);
 
-  const filtered = transactions.filter((tx) =>
-    filter === "all" ? true : tx === filter
-  );
+  const filtered = transactions.filter((tx: any) =>
+  filter === "all" ? true : tx.type === filter
+);
 
   // Transaction Icon by Type
   const Icon = ({ type }: any) => {
@@ -44,13 +44,13 @@ export default function TransactionsPage() {
     }
   };
 
-  const formatDate = (d: string) =>
-    new Date(d).toLocaleString("en-US", {
-      month: "short",
-      day: "numeric",
-      hour: "2-digit",
-      minute: "2-digit",
-    });
+  const formatDate = (d: string, year?: string) =>
+  `${new Date(d).toLocaleString("en-US", {
+    month: "short",
+    day: "numeric",
+    hour: "2-digit",
+    minute: "2-digit",
+  })} • ${year || new Date(d).getFullYear()}`;
 
   return (
     <div className="pt-6 pb-6 h-screen overflow-y-scroll max-w-3xl mx-auto">
@@ -100,8 +100,8 @@ export default function TransactionsPage() {
                   {tx.description || tx.type.toUpperCase()}
                 </p>
                 <p className="text-xs text-[var(--ptext)]">
-                  {formatDate(tx.createdAt)}
-                </p>
+  {formatDate(tx.createdAt, tx.year)}
+</p>
               </div>
             </div>
 

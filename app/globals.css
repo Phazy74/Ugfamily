@@ -107,3 +107,19 @@
   align-items: center;
    /* Top of everything */
 }
+/* 🚫 Hide Google Translate top bar */
+.goog-te-banner-frame.skiptranslate {
+  display: none !important;
+}
+
+body {
+  top: 0 !important;
+}
+
+/* 🚫 Hide Google branding & tooltip */
+.goog-logo-link,
+.goog-tooltip,
+.goog-tooltip:hover,
+.goog-te-gadget {
+  display: none !important;
+}
