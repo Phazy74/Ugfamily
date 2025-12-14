@@ -20,7 +20,7 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: "UnionGate",
-  description: "Welcome to [Bank Name], where your financial goals meet smart solutions. Experience seamless banking with security, convenience, and personalized service",
+  description: "Welcome to uniongate bank, where your financial goals meet smart solutions. Experience seamless banking with security, convenience, and personalized service",
   icons: {
     icon: "/fav.png",
     
