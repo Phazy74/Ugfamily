@@ -19,10 +19,10 @@ export default function PersonalInfo({
       </div>
 
       <div className="mt-6 grid md:grid-cols-2 gap-4">
-        <input className="input" placeholder="Legal First Name *" value={data.legalFirstName} onChange={e=>setField("legalFirstName", e.target.value)} />
-        <input className="input" placeholder="Middle Name *" value={data.middleName} onChange={e=>setField("middleName", e.target.value)} />
-        <input className="input" placeholder="Legal Last Name *" value={data.legalLastName} onChange={e=>setField("legalLastName", e.target.value)} />
-        <input className="input" placeholder="Username *" value={data.username} onChange={e=>setField("username", e.target.value)} />
+        <input className="input" placeholder="Legal First Name *" value={data.legalFirstName} onChange={e=>setField("legalFirstName", e.target.value)} required/>
+        <input className="input" placeholder="Middle Name *" value={data.middleName} onChange={e=>setField("middleName", e.target.value)} required />
+        <input className="input" placeholder="Legal Last Name *" value={data.legalLastName} onChange={e=>setField("legalLastName", e.target.value)} required/>
+        <input className="input" placeholder="Username *" value={data.username} onChange={e=>setField("username", e.target.value)} required/>
       </div>
 
       <div className="mt-6 flex justify-end">

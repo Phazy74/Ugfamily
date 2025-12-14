@@ -5,7 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { ShieldCheck } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useState ,useEffect } from "react";
 
 export default function VerifyAccountPage() {
   const router = useRouter();
@@ -46,6 +46,24 @@ export default function VerifyAccountPage() {
     router.push("/");
   };
 
+
+
+  const [userData, setUserData] = useState<any>(null);
+    const token = typeof window !== "undefined" ? localStorage.getItem("token") : "";
+  
+    useEffect(() => {
+      if (!token) return;
+  
+      fetch(`${process.env.NEXT_PUBLIC_API_URL}/user/me`, {
+        headers: { Authorization: `Bearer ${token}` }
+      })
+        .then(res => res.json())
+        .then(setUserData)
+        .catch(console.error);
+    }, [token]);
+  
+    const initials = userData?.initials || "??";
+
   return (
     <div className="py-6">
       <h1 className="text-2xl font-semibold">Account Verification</h1>
@@ -66,12 +84,12 @@ export default function VerifyAccountPage() {
                   <svg width="22" height="22" viewBox="0 0 24 24"><path fill="currentColor" d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12c5.16-1.26 9-6.45 9-12V5z"/></svg>
                 </div>
                 <div>
-                  <div className="font-semibold">Welcome to Swiss Community Bank</div>
+                  <div className="font-semibold">Welcome to UnionGate family</div>
                   <p className="text-sm text-[var(--ptext)]">
                     Complete your account verification to access all features.
                   </p>
                   <div className="mt-3 text-sm leading-relaxed text-[var(--headtext)]/80">
-                    <p><b>Dear Roland Onyekwere david,</b></p>
+                    <p><b>Dear {initials},</b></p>
                     <p className="mt-2">
                       Welcome Onboard! ... Please review our terms and conditions below before proceeding.
                     </p>
