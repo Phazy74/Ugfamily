@@ -4,16 +4,17 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import {
   ArrowDownCircle,
-  ArrowUpCircle,
   Wallet2,
   Send,
   CreditCard,
 } from "lucide-react";
 
 export default function TransactionsPage() {
-  const [transactions, setTransactions] = useState([]);
+  const [transactions, setTransactions] = useState<any[]>([]);
   const [filter, setFilter] = useState("all");
-  const token = typeof window !== "undefined" ? localStorage.getItem("token") : "";
+
+  const token =
+    typeof window !== "undefined" ? localStorage.getItem("token") : "";
 
   useEffect(() => {
     if (!token) return;
@@ -26,11 +27,12 @@ export default function TransactionsPage() {
       .catch(console.error);
   }, [token]);
 
-  const filtered = transactions.filter((tx: any) =>
-  filter === "all" ? true : tx.type === filter
-);
+  /* ✅ FIXED FILTER */
+  const filtered = transactions.filter((tx) =>
+    filter === "all" ? true : tx.type === filter
+  );
 
-  // Transaction Icon by Type
+  /* ICONS */
   const Icon = ({ type }: any) => {
     switch (type) {
       case "deposit":
@@ -44,24 +46,31 @@ export default function TransactionsPage() {
     }
   };
 
-  const formatDate = (d: string, year?: string) =>
-  `${new Date(d).toLocaleString("en-US", {
-    month: "short",
-    day: "numeric",
-    hour: "2-digit",
-    minute: "2-digit",
-  })} • ${year || new Date(d).getFullYear()}`;
+  /* ✅ DATE FORMATTER (ADMIN-EDITABLE) */
+  const formatDate = (tx: any) => {
+    const d = new Date(tx.transactionDate || tx.createdAt);
+
+    return d.toLocaleString("en-US", {
+      month: "short",
+      day: "numeric",
+      year: "numeric",
+      hour: "2-digit",
+      minute: "2-digit",
+    });
+  };
 
   return (
     <div className="pt-6 pb-6 h-screen overflow-y-scroll max-w-3xl mx-auto">
 
-      {/* Page Header */}
-      <h1 className="text-2xl font-bold text-[var(--headtext)]">Transactions</h1>
+      {/* Header */}
+      <h1 className="text-2xl font-bold text-[var(--headtext)]">
+        Transactions
+      </h1>
       <p className="text-[var(--ptext)] mb-4">
         View your deposit, transfers, and card transaction history.
       </p>
 
-      {/* Filter Tabs */}
+      {/* Filters */}
       <div className="flex gap-2 overflow-x-auto mb-6">
         {["all", "deposit", "transfer", "card"].map((tab) => (
           <button
@@ -79,8 +88,8 @@ export default function TransactionsPage() {
         ))}
       </div>
 
-      {/* Transaction List */}
-      <div className="space-y-4 overflow-y-scroll ">
+      {/* List */}
+      <div className="space-y-4">
         {filtered.length === 0 && (
           <p className="text-center text-[var(--ptext)] mt-10">
             No transactions found.
@@ -100,8 +109,8 @@ export default function TransactionsPage() {
                   {tx.description || tx.type.toUpperCase()}
                 </p>
                 <p className="text-xs text-[var(--ptext)]">
-  {formatDate(tx.createdAt, tx.year)}
-</p>
+                  {formatDate(tx)}
+                </p>
               </div>
             </div>
 
