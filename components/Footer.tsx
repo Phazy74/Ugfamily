@@ -60,7 +60,7 @@ export default function Footer() {
                             </li>
                             <li className="flex gap-3">
                                 <MailIcon />
-                                <a href="mailto:Support@uniongatebank.com" className="hover:text-white transition-colors">Support@uniongatebank.com</a>
+                                <a href="mailto:Support@uniongatebank.com" className="hover:text-white transition-colors">Support@ugfamily.com</a>
                             </li>
                              <li className="relative pl-8">
                                 <div className="absolute left-0 top-1.5 w-3 h-3 bg-[var(--lemon)] rounded-full"></div>

@@ -99,7 +99,7 @@ export default function HomepageExpertise() {
                   </li>
                 ))}
               </ul>
-              <Link href={currentContent.contactHref} className="inline-flex items-center gap-2 mt-8 bg-[var(--lemon)] text-[var(--darkgreen)] font-bold px-6 py-3 rounded-full transition-transform hover:scale-105">
+              <Link href="/contact" className="inline-flex items-center gap-2 mt-8 bg-[var(--lemon)] text-[var(--darkgreen)] font-bold px-6 py-3 rounded-full transition-transform hover:scale-105">
                 Contact Now →
               </Link>
             </div>

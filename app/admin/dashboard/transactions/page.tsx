@@ -464,9 +464,12 @@ export default function AdminTransactionsPage() {
   const [tx, setTx] = useState<any[]>([]);
   const [page, setPage] = useState(1);
   const [pages, setPages] = useState(1);
-  const [loading, setLoading] = useState(true);
+  const[loading, setLoading] = useState(true);
   const [modal, setModal] = useState<any>(null);
+  
   const [editDate, setEditDate] = useState("");
+  // State for updating description
+  const [editDescription, setEditDescription] = useState("");
 
   const [filters, setFilters] = useState({
     type: "",
@@ -488,8 +491,8 @@ export default function AdminTransactionsPage() {
     });
 
     const res = await fetch(
-     ` ${process.env.NEXT_PUBLIC_API_URL}/admin/transactions?${params}`,
-      { headers: { Authorization:` Bearer ${token}` } }
+     `${process.env.NEXT_PUBLIC_API_URL}/admin/transactions?${params}`,
+      { headers: { Authorization: `Bearer ${token}` } }
     );
 
     const data = await res.json();
@@ -527,12 +530,12 @@ export default function AdminTransactionsPage() {
 
   const updateStatus = async (id: string, newStatus: string) => {
     const res = await fetch(
-      `${process.env.NEXT_PUBLIC_API_URL}/admin/transaction/${id}/status ` ,
+      `${process.env.NEXT_PUBLIC_API_URL}/admin/transaction/${id}/status`,
       {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
-          Authorization:` Bearer ${token}`,
+          Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify({ status: newStatus }),
       }
@@ -568,6 +571,31 @@ export default function AdminTransactionsPage() {
       setModal(null);
     } else {
       alert(data.message || "Failed to update date");
+    }
+  };
+
+  // NEW FUNCTION TO UPDATE DESCRIPTION
+  const updateDescription = async (id: string) => {
+    const res = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/admin/transaction/${id}/description`,
+      {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({ description: editDescription }),
+      }
+    );
+
+    const data = await res.json();
+
+    if (data.success) {
+      alert("Transaction description updated!");
+      fetchTx();
+      setModal(null);
+    } else {
+      alert(data.message || "Failed to update description");
     }
   };
 
@@ -699,6 +727,8 @@ export default function AdminTransactionsPage() {
                             .toISOString()
                             .slice(0, 16)
                         );
+                        // Populate description when opening modal
+                        setEditDescription(t.description || "");
                       }}
                     >
                       View
@@ -736,8 +766,8 @@ export default function AdminTransactionsPage() {
 
       {/* MODAL */}
       {modal && (
-        <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
-          <div className="bg-white p-6 rounded-xl shadow-xl w-full max-w-md">
+        <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50 overflow-y-auto">
+          <div className="bg-white p-6 rounded-xl shadow-xl w-full max-w-lg m-4 my-8">
             <h2 className="text-xl font-bold mb-3">Transaction Details</h2>
 
             <p><strong>User:</strong> {modal.user?.personalInfo?.username}</p>
@@ -746,50 +776,83 @@ export default function AdminTransactionsPage() {
             <p><strong>Amount:</strong> ${formatAmount(modal.amount)}</p>
             <p><strong>Status:</strong> {badge(modal.status)}</p>
             <p><strong>Reference:</strong> {modal.reference}</p>
+            
+            {/* Show Current Description */}
+            <p><strong>Current Desc:</strong> {modal.description || "None"}</p>
 
-            <div className="mt-3">
-              <label className="block text-sm font-semibold mb-1">
-                Edit Transaction Date
-              </label>
-              <input
-                type="datetime-local"
-                className="input w-full"
-                value={editDate}
-                onChange={(e) => setEditDate(e.target.value)}
-              />
+            <div className="mt-4 p-4 border rounded bg-gray-50 space-y-4">
+              
+              {/* EDIT DATE */}
+              <div>
+                <label className="block text-sm font-semibold mb-1">
+                  Edit Transaction Date
+                </label>
+                <div className="flex gap-2">
+                  <input
+                    type="datetime-local"
+                    className="input w-full border border-gray-300 rounded px-2"
+                    value={editDate}
+                    onChange={(e) => setEditDate(e.target.value)}
+                  />
+                  <button
+                    className="px-4 py-2 bg-blue-600 text-white rounded whitespace-nowrap text-sm font-medium"
+                    onClick={() => updateDate(modal._id)}
+                  >
+                    Save Date
+                  </button>
+                </div>
+              </div>
+
+              {/* EDIT DESCRIPTION */}
+              <div>
+                <label className="block text-sm font-semibold mb-1">
+                  Edit Description
+                </label>
+                <div className="flex flex-col gap-2">
+                  <textarea
+                    className="input w-full border border-gray-300 rounded p-2 text-sm"
+                    rows={2}
+                    placeholder="Enter transaction description..."
+                    value={editDescription}
+                    onChange={(e) => setEditDescription(e.target.value)}
+                  />
+                  <button
+                    className="px-4 py-2 bg-blue-600 text-white rounded self-end text-sm font-medium"
+                    onClick={() => updateDescription(modal._id)}
+                  >
+                    Save Description
+                  </button>
+                </div>
+              </div>
+
             </div>
 
-            <div className="flex justify-end gap-2 mt-5">
+            <hr className="my-5" />
+
+            <div className="flex flex-wrap justify-end gap-2 mt-5">
               <button
-                className="px-4 py-2 bg-gray-300 rounded"
+                className="px-4 py-2 bg-gray-300 rounded text-sm font-medium"
                 onClick={() => setModal(null)}
               >
                 Close
               </button>
 
               <button
-                className="px-4 py-2 bg-blue-600 text-white rounded"
-                onClick={() => updateDate(modal._id)}
-              >
-                Save Date
-              </button>
-
-              <button
-                className="px-4 py-2 bg-green-600 text-white rounded"
+                className="px-4 py-2 bg-green-600 text-white rounded text-sm font-medium"
                 onClick={() => updateStatus(modal._id, "success")}
               >
                 Approve
               </button>
 
               <button
-                className="px-4 py-2 bg-yellow-600 text-white rounded"
+                className="px-4 py-2 bg-yellow-600 text-white rounded text-sm font-medium"
                 onClick={() => updateStatus(modal._id, "failed")}
               >
                 Mark Failed
               </button>
 
               <button
-                className="px-4 py-2 bg-red-600 text-white rounded"
+                className="px-4 py-2 bg-red-600 text-white rounded text-sm font-medium"
                 onClick={() => deleteTx(modal._id)}
               >
                 Delete
