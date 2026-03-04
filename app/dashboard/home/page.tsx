@@ -136,12 +136,12 @@ function HistoryIcon() {
           {/* --- ACTION BUTTONS --- */}
           <div className="mt-6 grid grid-cols-3 gap-3">
            
-            <ActionButton icon={<ArrowDown />} text="Transfer" link="/local-transfer" />
+            <ActionButton icon={<ArrowDown />} text="Transfer" link="/dashboard/local-transfer" />
             
-            <ActionButton icon={<ArrowUp />} text="Send" link="/wire-transfer"/>
+            <ActionButton icon={<ArrowUp />} text="Send" link="/dashboard/wire-transfer"/>
             
             
-            <ActionButton icon={<PlusIcon />} text="Deposit" link="/deposit" />
+            <ActionButton icon={<PlusIcon />} text="Deposit" link="/dashboard/deposit" />
             
           </div>
 
