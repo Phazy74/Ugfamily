@@ -6,26 +6,24 @@ import { useRouter } from "next/navigation";
 
 export default function WireTransferPage() {
   const router = useRouter();
-  const [balance, setBalance] = useState<number>(0);
-  const[loading, setLoading] = useState(false);
+  const[balance, setBalance] = useState<number>(0);
+  const [loading, setLoading] = useState(false);
   const [fetchingBalance, setFetchingBalance] = useState(true);
   
-  // Controls the animated popup
-  const [showPendingModal, setShowPendingModal] = useState(false);
+  const[showPendingModal, setShowPendingModal] = useState(false);
 
-  // Form State
   const [formData, setFormData] = useState({
     amount: "",
     beneficiaryName: "",
     bankName: "",
     swiftCode: "",
     iban: "",
-    reason: "",
+    country: "", 
   });
 
   const token = typeof window !== "undefined" ? localStorage.getItem("token") : null;
 
-  // 1. FETCH USER'S ACTUAL BALANCE
+  // FETCH REAL USD BALANCE
   useEffect(() => {
     const fetchBalance = async () => {
       try {
@@ -56,51 +54,53 @@ export default function WireTransferPage() {
     fetchBalance();
   }, [token]);
 
-  // 2. HANDLE TRANSACTION SUBMISSION
+  // HANDLE TRANSFER SUBMISSION
   const handleTransfer = async () => {
     if (!formData.amount || Number(formData.amount) <= 0) return alert("Please enter a valid amount");
-    if (Number(formData.amount) > balance) return alert("Insufficient funds");
-    if (!formData.beneficiaryName || !formData.bankName || !formData.iban) return alert("Please fill in all required beneficiary details");
+    
+    if (Number(formData.amount) + 25 > balance) {
+      return alert("Insufficient funds. Remember there is a $25 wire transfer fee.");
+    }
+    
+    if (!formData.beneficiaryName || !formData.bankName || !formData.iban || !formData.country) {
+      return alert("Please fill in all required beneficiary details.");
+    }
 
     setLoading(true);
 
     try {
-      // Send transfer to backend
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/transfer/wire`, { // <-- Update this URL to match your backend route!
+      // Create payload to match backend variables EXACTLY
+      const payload = {
+        amount: Number(formData.amount),
+        recipientName: formData.beneficiaryName,
+        bankName: formData.bankName,
+        swift: formData.swiftCode,
+        iban: formData.iban,
+        country: formData.country,
+      };
+
+      // 🔴 IMPORTANT: Adjust "wire/send" below if your backend server.js uses a different word!
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/wire/send`, { 
         method: "POST",
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
         },
-        body: JSON.stringify({
-          ...formData,
-          amount: Number(formData.amount),
-          type: "wire transfer",
-          direction: "debit",
-          status: "pending", // Force status to pending
-        }),
+        body: JSON.stringify(payload),
       });
 
       const data = await res.json();
 
-      if (data.success || res.ok) {
-        // Success! Show the pending modal
+      if (res.ok && (data.success || !data.error)) {
+        // SUCCESS! Show animation and reset form
         setShowPendingModal(true);
+        setBalance(prev => prev - (Number(formData.amount) + 25)); // Instantly deduct on screen
       } else {
-        // Backend rejected it
-        alert(data.message || "Error while making transfer");
-        
-        // 🔴 REMOVE THIS LINE LATER! 
-        // We are forcing the modal to show right now just so you can see the animation work!
-        setShowPendingModal(true); 
+        alert(data.error || data.message || "Transfer failed.");
       }
     } catch (error) {
       console.error("Transfer error:", error);
-      alert("Error while making transfer");
-      
-      // 🔴 REMOVE THIS LINE LATER! 
-      // Forces the modal to show so you can test the UI
-      setShowPendingModal(true);
+      alert("Network error while making transfer. Check your internet connection.");
     } finally {
       setLoading(false);
     }
@@ -111,7 +111,7 @@ export default function WireTransferPage() {
       <h1 className="text-2xl font-bold">Wire Transfer</h1>
       <p className="text-gray-500 text-sm mt-[-10px]">Send money to international bank accounts</p>
 
-      {/* Available Balance Card */}
+      {/* Available Balance */}
       <div className="bg-white p-5 rounded-xl shadow-sm border flex items-center justify-between">
         <div>
           <p className="text-sm text-gray-500 font-medium">Available USD Balance</p>
@@ -130,7 +130,10 @@ export default function WireTransferPage() {
 
       {/* Amount Input */}
       <div className="bg-white p-5 rounded-xl shadow-sm border">
-        <p className="font-semibold text-gray-700 mb-3">Transfer Amount</p>
+        <div className="flex justify-between items-center mb-3">
+          <p className="font-semibold text-gray-700">Transfer Amount</p>
+          <p className="text-xs text-blue-600 font-semibold bg-blue-50 px-2 py-1 rounded">+10% Wire Fee</p>
+        </div>
         <div className="relative">
           <span className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-500 text-xl font-medium">$</span>
           <input
@@ -175,12 +178,11 @@ export default function WireTransferPage() {
           onChange={(e) => setFormData({ ...formData, iban: e.target.value })}
         />
 
-        <textarea
-          className="w-full border border-gray-300 p-3 rounded-lg outline-none focus:border-blue-500 transition-all resize-none"
-          placeholder="Reason for Transfer (Optional)"
-          rows={3}
-          value={formData.reason}
-          onChange={(e) => setFormData({ ...formData, reason: e.target.value })}
+        <input
+          className="w-full border border-gray-300 p-3 rounded-lg outline-none focus:border-blue-500 transition-all"
+          placeholder="Beneficiary Country"
+          value={formData.country}
+          onChange={(e) => setFormData({ ...formData, country: e.target.value })}
         />
       </div>
 
@@ -203,16 +205,11 @@ export default function WireTransferPage() {
         <p>All transactions are secure & 256-bit encrypted.</p>
       </div>
 
-      {/* ========================================= */}
-      {/* ANIMATED "PENDING" MODAL */}
-      {/* ========================================= */}
+      {/* PENDING MODAL */}
       {showPendingModal && (
         <div className="fixed inset-0 bg-black/60 z-50 flex items-center justify-center p-4 backdrop-blur-sm animate-in fade-in duration-200">
-          
-          {/* Card Body */}
           <div className="bg-white rounded-3xl shadow-2xl p-8 w-full max-w-sm flex flex-col items-center text-center transform transition-all animate-in zoom-in-95 duration-300">
             
-            {/* Animated Clock Icon for "Pending" */}
             <div className="w-20 h-20 bg-yellow-100 rounded-full flex items-center justify-center mb-5 shadow-inner">
               <Clock size={40} className="text-yellow-600 animate-pulse" />
             </div>
@@ -223,27 +220,20 @@ export default function WireTransferPage() {
               Your wire transfer of <span className="font-bold text-gray-900">${Number(formData.amount).toLocaleString()}</span> to <span className="font-semibold">{formData.bankName}</span> is on the way. 
             </p>
 
-            {/* Status Badge */}
             <div className="bg-yellow-50 border border-yellow-200 text-yellow-700 px-4 py-2 rounded-lg font-semibold flex items-center gap-2 mb-6">
                <span className="w-2 h-2 rounded-full bg-yellow-500 animate-ping"></span>
                Status: Pending Approval
             </div>
 
             <button
-              onClick={() => router.push("/dashboard/transactions")} // Assuming you have a user transactions page!
+              onClick={() => {
+                setShowPendingModal(false);
+                setFormData({ amount: "", beneficiaryName: "", bankName: "", swiftCode: "", iban: "", country: "" });
+              }}
               className="w-full bg-gray-900 hover:bg-black text-white py-3 rounded-xl font-semibold flex items-center justify-center gap-2 transition-colors"
-            >
-              View Transactions <ArrowRight size={18} />
-            </button>
-
-            {/* Close button for testing purposes */}
-            <button 
-              onClick={() => setShowPendingModal(false)}
-              className="mt-4 text-gray-400 hover:text-gray-600 text-sm underline"
             >
               Close Window
             </button>
-
           </div>
         </div>
       )}
