@@ -132,7 +132,7 @@ export default function WireTransferPage() {
       <div className="bg-white p-5 rounded-xl shadow-sm border">
         <div className="flex justify-between items-center mb-3">
           <p className="font-semibold text-gray-700">Transfer Amount</p>
-          <p className="text-xs text-blue-600 font-semibold bg-blue-50 px-2 py-1 rounded">+10% Wire Fee</p>
+          <p className="text-xs text-blue-600 font-semibold bg-blue-50 px-2 py-1 rounded">+2.8% Wire Fee</p>
         </div>
         <div className="relative">
           <span className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-500 text-xl font-medium">$</span>
