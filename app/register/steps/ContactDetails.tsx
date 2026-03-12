@@ -142,7 +142,7 @@ import { useState } from "react";
 import PasswordInput from "@/components/PasswordInput";
 import CubeLoader from "@/components/FullPageLoader";
 
-const countries = ["Nigeria", "Ghana", "United States", "United Kingdom", "Canada"];
+const countries = ["Algeria", "Germany", "United States", "United Kingdom", "Canada"];
 
 type ContactFieldKeys =
   | "email"

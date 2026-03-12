@@ -286,7 +286,7 @@ const initial: FormState = {
 
   email: "",
   phone: "",
-  country: "Nigeria",
+  country: "United States",
 
   accountType: "Checking Account",
   transactionPin: "",

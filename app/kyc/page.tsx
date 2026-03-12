@@ -88,7 +88,7 @@ export default function KycPage() {
     addressLine: "",
     city: "",
     state: "",
-    nationality: "Nigeria",
+    nationality: "united States",
 
     idType: "",
     idNumber: "",
